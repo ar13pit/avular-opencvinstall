@@ -30,13 +30,13 @@ sudo apt-get install --assume-yes liblapacke-dev libopenblas-dev libgdal-dev che
 echo "Downloading and extracting OpenCV-$VERSION "
 echo
 
-wget opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip opencv-"${VERSION}".zip
+wget -O opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip opencv-"${VERSION}".zip
 unzip opencv-"${VERSION}".zip && rm opencv-"${VERSION}".zip
 
 echo "Downloading and extracting OpenCV-contrib-$VERSION"
 echo
 
-wget opencv_contrib-"${VERSION}".zip https://github.com/opencv/opencv_contrib/archive/"${VERSION}".zip
+wget -O opencv_contrib-"${VERSION}".zip https://github.com/opencv/opencv_contrib/archive/"${VERSION}".zip
 unzip opencv_contrib-"${VERSION}" && rm opencv_contrib-"${VERSION}".zip
 
 echo "Installing virtualenv"
