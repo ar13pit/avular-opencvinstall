@@ -52,6 +52,7 @@ fi
 
 cd ~/.venvs
 virtualenv --no-site-packages -p python3 cv
+cd ~
 echo "alias cv='source ~/.venvs/cv/bin/activate && PYTHONPATH='" >> ~/.bash_aliases
 source ~/.bashrc
 source ~/.venvs/cv/bin/activate
