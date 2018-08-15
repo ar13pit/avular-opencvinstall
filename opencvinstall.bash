@@ -32,7 +32,8 @@ sudo apt-get install --assume-yes libavcodec-dev libavformat-dev libswscale-dev 
 sudo apt-get install --assume-yes libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev
 sudo apt-get install --assume-yes libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev
 sudo apt-get install --assume-yes liblapacke-dev libopenblas-dev libgdal-dev checkinstall
-sudo apt-get install --assume-yes libeigen3-dev libatlas-base-dev libopenblas-dev
+sudo apt-get install --assume-yes libeigen3-dev libatlas-base-dev
+
 echo
 echo "--------------------------------------------------------------------------"
 echo "              Downloading and extracting OpenCV-$VERSION "
