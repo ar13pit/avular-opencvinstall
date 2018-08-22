@@ -139,4 +139,35 @@ else
     echo "OpenCV-$VERSION successfully installed"
 fi
 
+# Read Postional Parameters
+if [ -z "$1" ]; then
+        mandi_setup
+else
+    while [ "$1" != "" ]; do
+        case $1 in
+            --install-database )
+                shift
+                pg_host=$1
+                shift
+                pg_user=$1
+                shift
+                mandi_database_setup;;
+            
+            --install-asterisk )
+                asterisk_install;;
+            
+            --install-pri-support )
+                pri_support;;
+            
+            --h | --help )
+                usage
+                exit;;
+
+            * )
+                usage
+                exit 1;;
+        esac
+        shift
+    done
+fi
 
