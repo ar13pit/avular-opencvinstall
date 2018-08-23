@@ -72,6 +72,14 @@ install_dependencies()
     sudo apt-get install --assume-yes libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev
     sudo apt-get install --assume-yes liblapacke-dev libopenblas-dev libgdal-dev checkinstall
     sudo apt-get install --assume-yes libeigen3-dev libatlas-base-dev
+    sudo apt-get install --assume-yes libgirepository1.0-dev libglib2.0-dev
+}
+
+
+install_dependencies_pi()
+{
+    # To get rid of Python warning: Error retrieving accessibility bus address [org.a11y.Bus]
+    sudo apt-get install --assume-yes at-spi2-core
 }
 
 download_opencv()
@@ -114,7 +122,7 @@ install_virtualenv()
     fi
 
     cd ~/.venvs
-    virtualenv --system-site-packages -p python3 cv
+    virtualenv --no-site-packages -p python3 cv
     cd ~
     echo "alias cv='source ~/.venvs/cv/bin/activate && PYTHONPATH='" >> ~/.bash_aliases
     source ~/.bashrc
@@ -122,9 +130,7 @@ install_virtualenv()
     export PYTHONPATH=
 
     pip install -U pip
-    pip install numpy
-    pip install matplotlib
-    pip install ipython
+    pip install numpy matplotlib ipython pillow pgi pycairo cairocffi pygobject imageio
 }
 
 
