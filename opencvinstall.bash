@@ -72,7 +72,7 @@ install_dependencies()
 
     sudo apt-get install --assume-yes build-essential cmake git vim
     sudo apt-get install --assume-yes pkg-config unzip ffmpeg python3-dev gfortran python3-pip
-    sudo apt-get install --assume-yes  libdc1394-22 libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev
+    sudo apt-get install --assume-yes libdc1394-22 libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev
     sudo apt-get install --assume-yes libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
     sudo apt-get install --assume-yes libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev
     sudo apt-get install --assume-yes libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev
