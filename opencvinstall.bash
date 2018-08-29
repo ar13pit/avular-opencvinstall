@@ -30,9 +30,6 @@ fi
 
 usage()
 {
-    echo "--------------------------------------------------------------------------"
-    echo "              OpenCV $VERSION Installation"
-    echo "--------------------------------------------------------------------------"
     echo "Create a version file with the version of OpenCV to be installed in it"
     echo "Example:  echo \"3.4.2\" > version "
     echo
@@ -46,6 +43,7 @@ usage()
     --install-pri-support\n \
     --check-install"
     echo
+    echo "--------------------------------------------------------------------------"
 }
 
 if [ -z "$VERSION" ]; then
@@ -74,13 +72,14 @@ install_dependencies()
 
     sudo apt-get install --assume-yes build-essential cmake git vim
     sudo apt-get install --assume-yes pkg-config unzip ffmpeg python3-dev gfortran python3-pip
-    sudo apt-get install --assume-yes libgtk-3-dev libdc1394-22 libdc1394-22-dev libjpeg-dev libpng12-dev libtiff5-dev libjasper-dev
+    sudo apt-get install --assume-yes  libdc1394-22 libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev
     sudo apt-get install --assume-yes libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
     sudo apt-get install --assume-yes libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev
     sudo apt-get install --assume-yes libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev
     sudo apt-get install --assume-yes liblapacke-dev libopenblas-dev libgdal-dev checkinstall
     sudo apt-get install --assume-yes libeigen3-dev libatlas-base-dev
     sudo apt-get install --assume-yes libgirepository1.0-dev libglib2.0-dev
+    sudo apt-get install --assume-yes libgtk-3-dev
 }
 
 
@@ -93,6 +92,7 @@ install_dependencies_pi()
 
 download_opencv()
 {
+    cd
     echo
     echo "--------------------------------------------------------------------------"
     echo "              Downloading and extracting OpenCV-$VERSION "
@@ -139,7 +139,8 @@ install_virtualenv()
     export PYTHONPATH=
 
     pip install -U pip
-    pip install numpy matplotlib ipython pillow pgi pycairo cairocffi pygobject imageio
+    pip install numpy matplotlib ipython pillow pgi pycairo cairocffi imageio
+    pip install pygobject
 }
 
 
@@ -234,10 +235,18 @@ install_complete()
 
 # Read Postional Parameters
 if [ -z "$1" ]; then
-        install_complete
+    usage
 else
     while [ "$1" != "" ]; do
         case $1 in
+            -d | --device )
+                shift
+                case $1 in
+                    rpi )
+                        ;;
+                    other )
+                        ;;
+                esac ;;
             --install-dependencies )
                 install_dependencies ;;
 
