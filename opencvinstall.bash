@@ -152,7 +152,7 @@ config_cmake()
     echo "--------------------------------------------------------------------------"
     echo
 
-    cd opencv-"${VERSION}"
+    cd ~/opencv-"${VERSION}"
     mkdir build
     cd build
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
