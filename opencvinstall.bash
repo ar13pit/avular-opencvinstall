@@ -18,7 +18,15 @@
 
 
 VERSION="$(cat version)"
-DEVICE="$(grep Hardware /proc/cpuinfo)"
+
+SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
+
+if [ -z "$SWAPSIZE" ]; then
+    SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
+    SWAPSIZE_FLAG=1
+else
+    SWAPSIZE_FLAG=0
+fi
 
 usage()
 {
@@ -78,6 +86,7 @@ install_dependencies()
 
 install_dependencies_pi()
 {
+    install_dependencies
     # To get rid of Python warning: Error retrieving accessibility bus address [org.a11y.Bus]
     sudo apt-get install --assume-yes at-spi2-core
 }
@@ -169,15 +178,15 @@ make_opencv()
     echo "--------------------------------------------------------------------------"
     echo
 
-    if [ "$DEVICE" = "Hardware   : BCM2835" ]; then
-        sudo sed -i "s/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/g" /etc/dphys-swapfile
+    if [ "$SWAPSIZE_FLAG" = 1 ]; then
+        sudo sed -i "s/$SWAPSIZE/CONF_SWAPSIZE=1024/g" /etc/dphys-swapfile
         sudo systemctl restart dphys-swapfile
     fi
 
     make -j $(($(nproc) + 1))
-    
-    if [ "$DEVICE" = "Hardware   : BCM2835" ]; then
-        sudo sed -i "s/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/g" /etc/dphys-swapfile
+
+    if [ "$SWAPSIZE_FLAG" = 1 ]; then
+        sudo sed -i "s/CONF_SWAPSIZE=1024/$SWAPSIZE/g" /etc/dphys-swapfile
         sudo systemctl restart dphys-swapfile
     fi
 }
@@ -209,15 +218,15 @@ check_install()
 install_complete()
 {
     install_dependencies
-    download_opencv    
+    download_opencv
     install_virtualenv
     config_cmake
-    
+
     read -n1 -rsp $'Press space to continue...\n' key
     while [ "$key" != '' ]; do
         :
     done
-    
+
     make_opencv
     install_opencv
     check_install
@@ -231,7 +240,7 @@ else
         case $1 in
             --install-dependencies )
                 install_dependencies ;;
-            
+
             --download-opencv )
                 download_opencv ;;
 
@@ -246,10 +255,10 @@ else
 
             --install-opencv )
                 install_opencv ;;
-            
+
             --check-install )
                 check_install;;
-            
+
             --h | --help )
                 usage
                 exit;;
@@ -261,4 +270,3 @@ else
         shift
     done
 fi
-
