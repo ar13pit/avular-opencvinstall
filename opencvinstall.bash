@@ -18,6 +18,7 @@
 
 
 VERSION="$(cat version)"
+OPENCVHOME=~/opencv-"${VERSION}"
 
 SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
 
@@ -92,13 +93,13 @@ install_dependencies_pi()
 
 download_opencv()
 {
-    cd
     echo
     echo "--------------------------------------------------------------------------"
     echo "              Downloading and extracting OpenCV-$VERSION "
     echo "--------------------------------------------------------------------------"
     echo
 
+    cd
     wget -O opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip opencv-"${VERSION}".zip
     unzip opencv-"${VERSION}".zip && rm opencv-"${VERSION}".zip
 
@@ -108,6 +109,7 @@ download_opencv()
     echo "--------------------------------------------------------------------------"
     echo
 
+    cd
     wget -O opencv_contrib-"${VERSION}".zip https://github.com/opencv/opencv_contrib/archive/"${VERSION}".zip
     unzip opencv_contrib-"${VERSION}" && rm opencv_contrib-"${VERSION}".zip
 }
@@ -152,7 +154,7 @@ config_cmake()
     echo "--------------------------------------------------------------------------"
     echo
 
-    cd ~/opencv-"${VERSION}"
+    cd $OPENCVHOME
     mkdir build
     cd build
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
@@ -189,6 +191,8 @@ make_opencv()
     echo "              Building OpenCV-$VERSION"
     echo "--------------------------------------------------------------------------"
     echo
+    
+    cd $OPENCVHOME/build
 
     if [ "$SWAPSIZE_FLAG" = 1 ]; then
         sudo sed -i "s/$SWAPSIZE/CONF_SWAPSIZE=1024/g" /etc/dphys-swapfile
@@ -205,6 +209,13 @@ make_opencv()
 
 install_opencv()
 {
+    echo
+    echo "--------------------------------------------------------------------------"
+    echo "              Installing OpenCV-$VERSION"
+    echo "--------------------------------------------------------------------------"
+    echo
+    
+    cd $OPENCVHOME/build
     make install
     sudo ldconfig
 }
