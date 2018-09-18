@@ -36,6 +36,9 @@ COPY / ./_git/
 # Change owner of directory to USER from root
 RUN sudo chown -R $USER:$USER _git
 
+# Install dependencies of OpenCV
+RUN ./_git/opencvinstall.bash --install-dependencies
+
 # Start container of the Docker image at bash prompt
-CMD ["./_git/opencvinstall.bash", "--install-dependencies", "--download-opencv"]
+CMD ["/bin/bash"]
 
