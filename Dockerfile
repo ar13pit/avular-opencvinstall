@@ -38,5 +38,5 @@ COPY / ./_git/
 RUN sudo chown -R $USER:$USER _git
 
 # Start container of the Docker image at bash prompt
-CMD ["/bin/bash"]
+CMD ["./_git/opencvinstall.bash", "--install-dependencies", "--download-opencv"]
 
