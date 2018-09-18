@@ -23,6 +23,7 @@ OPENCVHOME=~/opencv-"${VERSION}"
 SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
 DEVICE=
 INSTALLATION=
+FLAG_CUDA=
 
 if [ -z "$SWAPSIZE" ]; then
     SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
@@ -48,10 +49,9 @@ usage()
                 desktop-with-cuda\n \
     --download-opencv\n\
     --config-cmake\n \
-    --install-complete\n \
+    --install-default\n \
     --install-dependencies\n \
     --install-opencv\n \
-    --install-pri-support\n \
     --install-virtualenv\n \
     --check-install"
     echo
@@ -87,7 +87,11 @@ install_dependencies()
     sudo apt-get install --assume-yes liblapacke-dev libopenblas-dev libgdal-dev checkinstall
     sudo apt-get install --assume-yes libeigen3-dev libatlas-base-dev
     sudo apt-get install --assume-yes libgirepository1.0-dev libglib2.0-dev
-    sudo apt-get install --assume-yes libgtk-3-dev
+
+    if [ "$INSTALLATION" == "gui" ]
+    then
+        sudo apt-get install --assume-yes libgtk-3-dev
+    fi
 }
 
 
@@ -171,7 +175,7 @@ config_cmake()
         -D WITH_OPENMP=ON \
         -D WITH_IPP=ON \
         -D WITH_NVCUVID=ON \
-        -D WITH_CUDA=ON \
+        -D WITH_CUDA="${FLAG_CUDA}" \
         -D WITH_CSTRIPES=ON \
         -D WITH_OPENCL=ON ..
 
@@ -186,14 +190,14 @@ make_opencv()
     
     cd $OPENCVHOME/build
 
-    if [ "$SWAPSIZE_FLAG" = 1 ]; then
+    if [ "$SWAPSIZE_FLAG" == 1 ]; then
         sudo sed -i "s/$SWAPSIZE/CONF_SWAPSIZE=1024/g" /etc/dphys-swapfile
         sudo systemctl restart dphys-swapfile
     fi
 
     make -j $(($(nproc) + 1))
 
-    if [ "$SWAPSIZE_FLAG" = 1 ]; then
+    if [ "$SWAPSIZE_FLAG" == 1 ]; then
         sudo sed -i "s/CONF_SWAPSIZE=1024/$SWAPSIZE/g" /etc/dphys-swapfile
         sudo systemctl restart dphys-swapfile
     fi
@@ -254,16 +258,20 @@ else
                 shift
                 case $1 in
                     rpi3 )
-                        DEVICE="rpi3" ;;
+                        DEVICE="rpi3" 
+                        FLAG_CUDA=OFF ;;
 
                     jetsontx1 )
-                        DEVICE="jetsontx1" ;;
+                        DEVICE="jetsontx1"
+                        FLAG_CUDA=ON ;;
 
                     desktop)
-                        DEVICE="desktop" ;;
+                        DEVICE="desktop"
+                        FLAG_CUDA=OFF ;;
 
                     desktop-with-cuda )
-                        DEVICE="desktop-with-cuda" ;;
+                        DEVICE="desktop-with-cuda"
+                        FLAG_CUDA=ON ;;
                 esac ;;
 
             -t | --type )
@@ -276,6 +284,9 @@ else
                         INSTALLATION="no-gui" ;;
                 esac ;;
 
+            --install-default )
+                install_complete ;;
+                
             --install-dependencies )
                 install_dependencies ;;
 
