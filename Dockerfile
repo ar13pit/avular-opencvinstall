@@ -16,7 +16,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV USER=avular
 
 # Update the image and install basic packages silently
-RUN apt-get update -qq && apt-get install --assume-yes -qq --no-install-recommends apt-utils curl dialog git sudo wget
+RUN apt-get -qq update && apt-get -qq install --assume-yes --no-install-recommends apt-utils curl dialog git sudo wget
 
 # Add user USER with SUDO previleges and disable SUDO password
 RUN addgroup -gid 2000 $USER && \

@@ -126,22 +126,22 @@ download_opencv()
 
     if [ !$VERBOSE ]
     then
-        FLAG_VERBOSE=-nv
+        FLAG_VERBOSE=-q
     else
         FLAG_VERBOSE=
     fi
 
     cd
-    wget -O opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip opencv-"${VERSION}".zip $FLAG_VERBOSE
-    unzip opencv-"${VERSION}".zip && rm opencv-"${VERSION}".zip
+    wget -O opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip opencv-"${VERSION}".zip --no-verbose
+    unzip $FLAG_VERBOSE opencv-"${VERSION}".zip && rm opencv-"${VERSION}".zip
 
     echo
     echo -e "\e[35m\e[1mDownloading and extracting OpenCV-contrib-$VERSION \e[0m"
     echo
 
     cd
-    wget -O opencv_contrib-"${VERSION}".zip https://github.com/opencv/opencv_contrib/archive/"${VERSION}".zip $FLAG_VERBOSE
-    unzip opencv_contrib-"${VERSION}" && rm opencv_contrib-"${VERSION}".zip
+    wget -O opencv_contrib-"${VERSION}".zip https://github.com/opencv/opencv_contrib/archive/"${VERSION}".zip --no-verbose
+    unzip $FLAG_VERBOSE opencv_contrib-"${VERSION}" && rm opencv_contrib-"${VERSION}".zip
 }
 
 
