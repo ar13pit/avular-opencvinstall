@@ -21,6 +21,8 @@ VERSION="$(cat version)"
 OPENCVHOME=~/opencv-"${VERSION}"
 
 SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
+DEVICE=
+INSTALLATION=
 
 if [ -z "$SWAPSIZE" ]; then
     SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
@@ -35,13 +37,22 @@ usage()
     echo "Example:  echo \"3.4.2\" > version "
     echo
     echo "Install OpenCV using opencvinstall.bash"
-    echo "Usage: ./opencvinstall.bash [options]"
+    echo "Usage: ./opencvinstall.bash [options] <arguments>"
     echo -e "options:\n \
     -h | --help\n \
+    -d | --device\n \
+            Arguments:\n \
+                rpi3\n \
+                jetsontx1\n \
+                desktop\n \
+                desktop-with-cuda\n \
+    --download-opencv\n\
+    --config-cmake\n \
     --install-complete\n \
     --install-dependencies\n \
-    --install-asterisk\n \
+    --install-opencv\n \
     --install-pri-support\n \
+    --install-virtualenv\n \
     --check-install"
     echo
     echo "--------------------------------------------------------------------------"
@@ -51,21 +62,17 @@ if [ -z "$VERSION" ]; then
     echo "version file not found"
     echo
     usage
-    exit
+    exit 1
 fi
 
 echo
-echo "--------------------------------------------------------------------------"
-echo "              OpenCV $VERSION Installation"
-echo "--------------------------------------------------------------------------"
+echo -e "\e[35m\e[1mOpenCV $VERSION Installation \e[0m"
 echo
 
 install_dependencies()
 {
     echo
-    echo "--------------------------------------------------------------------------"
-    echo "              Installing dependencies"
-    echo "--------------------------------------------------------------------------"
+    echo -e "\e[35m\e[1mInstalling dependencies \e[0m"
     echo
 
     sudo apt-get update
@@ -94,9 +101,7 @@ install_dependencies_pi()
 download_opencv()
 {
     echo
-    echo "--------------------------------------------------------------------------"
-    echo "              Downloading and extracting OpenCV-$VERSION "
-    echo "--------------------------------------------------------------------------"
+    echo -e "\e[35m\e[1mDownloading and extracting OpenCV-$VERSION \e[0m"
     echo
 
     cd
@@ -104,9 +109,7 @@ download_opencv()
     unzip opencv-"${VERSION}".zip && rm opencv-"${VERSION}".zip
 
     echo
-    echo "--------------------------------------------------------------------------"
-    echo "              Downloading and extracting OpenCV-contrib-$VERSION"
-    echo "--------------------------------------------------------------------------"
+    echo -e "\e[35m\e[1mDownloading and extracting OpenCV-contrib-$VERSION \e[0m"
     echo
 
     cd
@@ -118,9 +121,7 @@ download_opencv()
 install_virtualenv()
 {
     echo
-    echo "--------------------------------------------------------------------------"
-    echo "              Installing virtualenv and setting up (cv) venv"
-    echo "--------------------------------------------------------------------------"
+    echo -e "\e[35m\e[1mInstalling virtualenv and setting up (cv) venv \e[0m"
     echo
 
 
@@ -149,9 +150,7 @@ install_virtualenv()
 config_cmake()
 {
     echo
-    echo "--------------------------------------------------------------------------"
-    echo "              Configuring OpenCV-$VERSION build"
-    echo "--------------------------------------------------------------------------"
+    echo -e "\e[35m\e[1mConfiguring OpenCV-$VERSION build \e[0m"
     echo
 
     cd $OPENCVHOME
@@ -176,20 +175,13 @@ config_cmake()
         -D WITH_CSTRIPES=ON \
         -D WITH_OPENCL=ON ..
 
-    echo
-    echo "--------------------------------------------------------------------------"
-    echo "  !!! DO NOT FORGET TO EXAMINE THE OUTPUT OF CMAKE BEFORE CONTINUING !!!"
-    echo "--------------------------------------------------------------------------"
-    echo
 }
 
 
 make_opencv()
 {
     echo
-    echo "--------------------------------------------------------------------------"
-    echo "              Building OpenCV-$VERSION"
-    echo "--------------------------------------------------------------------------"
+    echo -e "\e[35m\e[1mBuilding OpenCV-$VERSION \e[0m"
     echo
     
     cd $OPENCVHOME/build
@@ -210,9 +202,7 @@ make_opencv()
 install_opencv()
 {
     echo
-    echo "--------------------------------------------------------------------------"
-    echo "              Installing OpenCV-$VERSION"
-    echo "--------------------------------------------------------------------------"
+    echo -e "\e[35m\e[1mInstalling OpenCV-$VERSION \e[0m"
     echo
     
     cd $OPENCVHOME/build
@@ -224,17 +214,15 @@ install_opencv()
 check_install()
 {
     echo
-    echo "--------------------------------------------------------------------------"
-    echo "              Checking installation"
-    echo "--------------------------------------------------------------------------"
+    echo -e "\e[35m\e[1mChecking installation \e[0m"
     echo
 
     CVV="$(python -c "import cv2; print(cv2.__version__)")"
 
     if [ "$CVV" != "$VERSION" ]; then
-        echo "Installation failure"
+        echo -e "\e[33m\e[1mInstallation failure \e[0m"
     else
-        echo "OpenCV-$VERSION successfully installed"
+        echo -e "\e[33m\e[1mOpenCV-$VERSION successfully installed \e[0m"
     fi
 }
 
@@ -245,6 +233,7 @@ install_complete()
     install_virtualenv
     config_cmake
 
+    echo -e "\e[35m\e[1mExamine the output of CMake before continuing \e[0m"
     read -n1 -rsp $'Press space to continue...\n' key
     while [ "$key" != '' ]; do
         :
@@ -264,11 +253,29 @@ else
             -d | --device )
                 shift
                 case $1 in
-                    rpi )
-                        ;;
-                    other )
-                        ;;
+                    rpi3 )
+                        DEVICE="rpi3" ;;
+
+                    jetsontx1 )
+                        DEVICE="jetsontx1" ;;
+
+                    desktop)
+                        DEVICE="desktop" ;;
+
+                    desktop-with-cuda )
+                        DEVICE="desktop-with-cuda" ;;
                 esac ;;
+
+            -t | --type )
+                shift
+                case $1 in
+                    gui )
+                        INSTALLATION="gui" ;;
+
+                    no-gui )
+                        INSTALLATION="no-gui" ;;
+                esac ;;
+
             --install-dependencies )
                 install_dependencies ;;
 
@@ -288,15 +295,15 @@ else
                 install_opencv ;;
 
             --check-install )
-                check_install;;
+                check_install ;;
 
             --h | --help )
                 usage
-                exit;;
+                exit 1 ;;
 
             * )
                 usage
-                exit 1;;
+                exit 1 ;;
         esac
         shift
     done
