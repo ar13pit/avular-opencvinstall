@@ -17,7 +17,7 @@
 #   2018-08-22 Arpit Aggarwal
 
 
-VERSION="$(cat version)"
+VERSION="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cat version)"
 OPENCVHOME=~/opencv-"${VERSION}"
 
 SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
@@ -56,7 +56,7 @@ usage()
     --download-opencv\n\
     --config-cmake\n \
     --install-default\n \
-            equivalent to:  -d desktop -t gui
+            equivalent to:  -d desktop -t gui\n \
     --install-dependencies\n \
     --install-opencv\n \
     --install-virtualenv\n \
