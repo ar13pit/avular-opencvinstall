@@ -86,7 +86,7 @@ install_dependencies()
     
     if [ !$VERBOSE ]
     then
-        FLAG_VERBOSE=-qq
+        FLAG_VERBOSE=-qq > /dev/null
     else
         FLAG_VERBOSE=
     fi
@@ -94,19 +94,19 @@ install_dependencies()
     sudo apt-get update $FLAG_VERBOSE
     sudo apt-get upgrade --assume-yes $FLAG_VERBOSE
 
-    sudo apt-get install --assume-yes $FLAG_VERBOSE build-essential cmake git vim
-    sudo apt-get install --assume-yes $FLAG_VERBOSE pkg-config unzip ffmpeg python3-dev gfortran python3-pip
-    sudo apt-get install --assume-yes $FLAG_VERBOSE libdc1394-22 libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev
-    sudo apt-get install --assume-yes $FLAG_VERBOSE libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
-    sudo apt-get install --assume-yes $FLAG_VERBOSE libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev
-    sudo apt-get install --assume-yes $FLAG_VERBOSE libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev
-    sudo apt-get install --assume-yes $FLAG_VERBOSE liblapacke-dev libopenblas-dev libgdal-dev checkinstall
-    sudo apt-get install --assume-yes $FLAG_VERBOSE libeigen3-dev libatlas-base-dev
-    sudo apt-get install --assume-yes $FLAG_VERBOSE libgirepository1.0-dev libglib2.0-dev
+    sudo apt-get install --assume-yes build-essential cmake git vim $FLAG_VERBOSE
+    sudo apt-get install --assume-yes pkg-config unzip ffmpeg python3-dev gfortran python3-pip $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libdc1394-22 libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes liblapacke-dev libopenblas-dev libgdal-dev checkinstall $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libeigen3-dev libatlas-base-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libgirepository1.0-dev libglib2.0-dev $FLAG_VERBOSE
 
     if [ "$INSTALLATION" == "gui" ]
     then
-        sudo apt-get install --assume-yes $FLAG_VERBOSE libgtk-3-dev
+        sudo apt-get install --assume-yes libgtk-3-dev $FLAG_VERBOSE
     fi
 }
 
