@@ -6,3 +6,5 @@ services:
 
 script:
     - ci/travis-build.bash
+      #    - ci/travis-make-rpi3.bash
+      #    - ci/travis-make-jetsontx1.bash
