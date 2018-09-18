@@ -15,8 +15,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Set environment variable USER
 ENV USER=avular
 
-# Update the image and install basic packages
-RUN apt-get update && apt-get install --assume-yes --no-install-recommends apt-utils curl dialog git sudo wget
+# Update the image and install basic packages silently
+RUN apt-get update -qq && apt-get install --assume-yes -qq --no-install-recommends apt-utils curl dialog git sudo wget
 
 # Add user USER with SUDO previleges and disable SUDO password
 RUN addgroup -gid 2000 $USER && \
@@ -37,7 +37,7 @@ COPY / ./_git/
 RUN sudo chown -R $USER:$USER _git
 
 # Install dependencies of OpenCV
-RUN ./_git/opencvinstall.bash --install-dependencies
+RUN ./_git/opencvinstall.bash -nv --install-dependencies
 
 # Start container of the Docker image at bash prompt
 CMD ["/bin/bash"]

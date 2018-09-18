@@ -26,6 +26,7 @@ SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
 DEVICE="desktop"
 INSTALLATION="gui"
 FLAG_CUDA=OFF
+VERBOSE=true
 
 if [ -z "$SWAPSIZE" ]; then
     SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
@@ -53,6 +54,7 @@ usage()
             Arguments:\n \
                 gui\n \
                 no-gui\n \
+    -nv | --no-verbose\n \
     --download-opencv\n\
     --config-cmake\n \
     --install-default\n \
@@ -81,23 +83,30 @@ install_dependencies()
     echo
     echo -e "\e[35m\e[1mInstalling dependencies \e[0m"
     echo
+    
+    if [ !$VERBOSE ]
+    then
+        FLAG_VERBOSE=-qq
+    else
+        FLAG_VERBOSE=
+    fi
 
-    sudo apt-get update
-    sudo apt-get upgrade --assume-yes
+    sudo apt-get update $FLAG_VERBOSE
+    sudo apt-get upgrade --assume-yes $FLAG_VERBOSE
 
-    sudo apt-get install --assume-yes build-essential cmake git vim
-    sudo apt-get install --assume-yes pkg-config unzip ffmpeg python3-dev gfortran python3-pip
-    sudo apt-get install --assume-yes libdc1394-22 libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev
-    sudo apt-get install --assume-yes libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
-    sudo apt-get install --assume-yes libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev
-    sudo apt-get install --assume-yes libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev
-    sudo apt-get install --assume-yes liblapacke-dev libopenblas-dev libgdal-dev checkinstall
-    sudo apt-get install --assume-yes libeigen3-dev libatlas-base-dev
-    sudo apt-get install --assume-yes libgirepository1.0-dev libglib2.0-dev
+    sudo apt-get install --assume-yes $FLAG_VERBOSE build-essential cmake git vim
+    sudo apt-get install --assume-yes $FLAG_VERBOSE pkg-config unzip ffmpeg python3-dev gfortran python3-pip
+    sudo apt-get install --assume-yes $FLAG_VERBOSE libdc1394-22 libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev
+    sudo apt-get install --assume-yes $FLAG_VERBOSE libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
+    sudo apt-get install --assume-yes $FLAG_VERBOSE libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev
+    sudo apt-get install --assume-yes $FLAG_VERBOSE libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev
+    sudo apt-get install --assume-yes $FLAG_VERBOSE liblapacke-dev libopenblas-dev libgdal-dev checkinstall
+    sudo apt-get install --assume-yes $FLAG_VERBOSE libeigen3-dev libatlas-base-dev
+    sudo apt-get install --assume-yes $FLAG_VERBOSE libgirepository1.0-dev libglib2.0-dev
 
     if [ "$INSTALLATION" == "gui" ]
     then
-        sudo apt-get install --assume-yes libgtk-3-dev
+        sudo apt-get install --assume-yes $FLAG_VERBOSE libgtk-3-dev
     fi
 }
 
@@ -115,8 +124,15 @@ download_opencv()
     echo -e "\e[35m\e[1mDownloading and extracting OpenCV-$VERSION \e[0m"
     echo
 
+    if [ !$VERBOSE ]
+    then
+        FLAG_VERBOSE=-nv
+    else
+        FLAG_VERBOSE=
+    fi
+
     cd
-    wget -O opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip opencv-"${VERSION}".zip
+    wget -O opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip opencv-"${VERSION}".zip $FLAG_VERBOSE
     unzip opencv-"${VERSION}".zip && rm opencv-"${VERSION}".zip
 
     echo
@@ -124,7 +140,7 @@ download_opencv()
     echo
 
     cd
-    wget -O opencv_contrib-"${VERSION}".zip https://github.com/opencv/opencv_contrib/archive/"${VERSION}".zip
+    wget -O opencv_contrib-"${VERSION}".zip https://github.com/opencv/opencv_contrib/archive/"${VERSION}".zip $FLAG_VERBOSE
     unzip opencv_contrib-"${VERSION}" && rm opencv_contrib-"${VERSION}".zip
 }
 
@@ -290,6 +306,9 @@ else
                     no-gui )
                         INSTALLATION="no-gui" ;;
                 esac ;;
+
+            -nv | --no-verbose )
+                VERBOSE=false ;;
 
             --install-default )
                 install_complete ;;
