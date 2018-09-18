@@ -21,9 +21,11 @@ VERSION="$(cat version)"
 OPENCVHOME=~/opencv-"${VERSION}"
 
 SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
-DEVICE=
-INSTALLATION=
-FLAG_CUDA=
+
+# Installation flag defaults
+DEVICE="desktop"
+INSTALLATION="gui"
+FLAG_CUDA=OFF
 
 if [ -z "$SWAPSIZE" ]; then
     SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
@@ -47,9 +49,14 @@ usage()
                 jetsontx1\n \
                 desktop\n \
                 desktop-with-cuda\n \
+    -t | --type\n \
+            Arguments:\n \
+                gui\n \
+                no-gui\n \
     --download-opencv\n\
     --config-cmake\n \
     --install-default\n \
+            equivalent to:  -d desktop -t gui
     --install-dependencies\n \
     --install-opencv\n \
     --install-virtualenv\n \
