@@ -1,7 +1,10 @@
-#! /usr/bin/env bash
+#!/bin/bash
 
-echo -e "\e[35m\e[1m Creating docker image \e[0m"
+echo -e "\e[35m\e[1mCreating docker image \e[0m"
 
-docker build -t "arpit-test" .
-ls
-docker run arpit-test
+# Build docker image
+docker build -t avular-test .
+
+# Start docker image containers
+docker run -d --name avular-env-rpi3 -t avular-test:latest
+docker run -d --name avular-env-jetsontx1 -t avular-test:latest
