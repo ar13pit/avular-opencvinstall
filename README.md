@@ -7,6 +7,6 @@ Raspberry Pi 3 and Nvidia Jetson TX1 install files do not include GUI support an
 ## Setup
 Clone the repository and run:
 ```
-./opencvinstall
+./opencvinstall.bash
 ```
 to see the list of available options to install OpenCV-3.
