@@ -334,7 +334,7 @@ else
             --check-install )
                 check_install ;;
 
-            --h | --help )
+            -h | --help )
                 usage
                 exit 1 ;;
 
