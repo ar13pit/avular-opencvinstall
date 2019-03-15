@@ -16,11 +16,10 @@
 # Contributors:
 #   2018-08-22 Arpit Aggarwal
 
-
+SOURCE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 VERSION="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cat version)"
 OPENCVHOME=~/opencv-"${VERSION}"
 
-SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
 
 # Installation flag defaults
 DEVICE="desktop"
@@ -28,11 +27,18 @@ INSTALLATION="gui"
 FLAG_CUDA=OFF
 VERBOSE=true
 
-if [ -z "$SWAPSIZE" ]; then
-    SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
-    SWAPSIZE_FLAG=1
+if [ -f /etc/dphys-swapfile ]
+then
+
+	SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
+	if [ -z "$SWAPSIZE" ]; then
+	    SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
+	    SWAPSIZE_FLAG=1
+	else
+	    SWAPSIZE_FLAG=0
+	fi
 else
-    SWAPSIZE_FLAG=0
+	SWAPSIZE_FLAG=0
 fi
 
 usage()
@@ -48,6 +54,7 @@ usage()
             Arguments:\n \
                 rpi3\n \
                 jetsontx1\n \
+                jetsontx2\n \
                 desktop\n \
                 desktop-with-cuda\n \
     -t | --type\n \
@@ -75,7 +82,7 @@ if [ -z "$VERSION" ]; then
 fi
 
 echo
-echo -e "\e[35m\e[1mOpenCV $VERSION Installation \e[0m"
+echo -e "\e[35m\e[1mOpenCV $VERSION Installation in $OPENCVHOME \e[0m"
 echo
 
 install_dependencies()
@@ -86,7 +93,7 @@ install_dependencies()
     
     if [ !$VERBOSE ]
     then
-        FLAG_VERBOSE=-qq > /dev/null
+        FLAG_VERBOSE=
     else
         FLAG_VERBOSE=
     fi
@@ -96,9 +103,9 @@ install_dependencies()
 
     sudo apt-get install --assume-yes build-essential cmake git vim $FLAG_VERBOSE
     sudo apt-get install --assume-yes pkg-config unzip ffmpeg python3-dev gfortran python3-pip $FLAG_VERBOSE
-    sudo apt-get install --assume-yes libdc1394-22 libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libtheora-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes liblapacke-dev libopenblas-dev libgdal-dev checkinstall $FLAG_VERBOSE
     sudo apt-get install --assume-yes libeigen3-dev libatlas-base-dev $FLAG_VERBOSE
@@ -132,7 +139,7 @@ download_opencv()
     fi
 
     cd
-    wget -O opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip opencv-"${VERSION}".zip --no-verbose
+    wget -O opencv-"${VERSION}".zip https://github.com/opencv/opencv/archive/"${VERSION}".zip --no-verbose
     unzip $FLAG_VERBOSE opencv-"${VERSION}".zip && rm opencv-"${VERSION}".zip
 
     echo
@@ -181,12 +188,13 @@ config_cmake()
     echo
 
     cd $OPENCVHOME
-    mkdir build
+    echo "In $PWD"
+    mkdir -p build
     cd build
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
-        -D CMAKE_INSTALL_PREFIX=~/.venvs/cv \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-"${VERSION}"/modules \
-        -D PYTHON_EXECUTABLE=~/.venvs/cv/bin/python \
+        -D BUILD_JAVA=OFF \
         -D BUILD_EXAMPLES=OFF \
         -D BUILD_opencv_apps=OFF \
         -D BUILD_DOCS=OFF \
@@ -199,8 +207,27 @@ config_cmake()
         -D WITH_IPP=ON \
         -D WITH_NVCUVID=ON \
         -D WITH_CUDA="${FLAG_CUDA}" \
+        -D CUDA_ARCH_BIN="${ARCH_BIN}" \
+	-D CUDA_ARCH_PTX="" \
+	-D ENABLE_FAST_MATH=ON \
+	-D CUDA_FAST_MATH=ON \
+	-D WITH_CUBLAS=ON \
+	-D WITH_LIBV4L=ON \
+	-D WITH_GSTREAMER=ON \
+	-D WITH_GSTREAMER_0_10=OFF \
+	-D WITH_QT=ON \
+	-D WITH_OPENGL=ON \
         -D WITH_CSTRIPES=ON \
-        -D WITH_OPENCL=ON ..
+        -D WITH_OPENCL=ON \
+        -D OPENCV_ENABLE_NONFREE=ON \
+        -D OPENCV_GENERATE_PKGCONFIG=ON \
+        -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python3 ..
+
+#        -D OPENCV_GENERATE_PKGCONFIG=ON \
+#        -D OPENCV_PYTHON3_VERSION=ON \
+
+#        -D CMAKE_INSTALL_PREFIX=~/.venvs/cv \
+#        -D PYTHON_EXECUTABLE=~/.venvs/cv/bin/python \
 
 }
 
@@ -218,7 +245,7 @@ make_opencv()
         sudo systemctl restart dphys-swapfile
     fi
 
-    make -j $(($(nproc) + 1))
+    make -j $(($(nproc) - 1))
 
     if [ "$SWAPSIZE_FLAG" == 1 ]; then
         sudo sed -i "s/CONF_SWAPSIZE=1024/$SWAPSIZE/g" /etc/dphys-swapfile
@@ -244,9 +271,10 @@ check_install()
     echo -e "\e[35m\e[1mChecking installation \e[0m"
     echo
 
-    CVV="$(python -c "import cv2; print(cv2.__version__)")"
+    CVV="$(python3 -c "import cv2; print(cv2.__version__)")"
 
-    if [ "$CVV" != "$VERSION" ]; then
+    if [ "$CVV" != "$VERSION" ]
+    then
         echo -e "\e[33m\e[1mInstallation failure \e[0m"
     else
         echo -e "\e[33m\e[1mOpenCV-$VERSION successfully installed \e[0m"
@@ -257,7 +285,7 @@ install_complete()
 {
     install_dependencies
     download_opencv
-    install_virtualenv
+#    install_virtualenv
     config_cmake
 
     echo -e "\e[35m\e[1mExamine the output of CMake before continuing \e[0m"
@@ -286,7 +314,13 @@ else
 
                     jetsontx1 )
                         DEVICE="jetsontx1"
-                        FLAG_CUDA=ON ;;
+                        FLAG_CUDA=ON
+                        ARCH_BIN=5.3 ;;
+
+                    jetsontx2 )
+                        DEVICE="jetsontx2"
+                        FLAG_CUDA=ON
+                        ARCH_BIN=6.2 ;;
 
                     desktop)
                         DEVICE="desktop"
