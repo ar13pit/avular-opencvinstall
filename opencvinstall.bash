@@ -320,7 +320,10 @@ else
                     jetsontx2 )
                         DEVICE="jetsontx2"
                         FLAG_CUDA=ON
-                        ARCH_BIN=6.2 ;;
+                        ARCH_BIN=6.2
+                        sudo patch -N /usr/local/cuda/include/cuda_gl_interop.h $SOURCE_DIR/patches/jetsontx2/OpenGLHeader.patch
+                        sudo ln -sfn /usr/lib/aarch64-linux-gnu/tegra/libGL.so /usr/lib/aarch64-linux-gnu/libGL.so
+ ;;
 
                     desktop)
                         DEVICE="desktop"
