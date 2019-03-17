@@ -199,6 +199,10 @@ config_cmake()
         -D BUILD_JAVA=OFF \
         -D BUILD_EXAMPLES=OFF \
         -D BUILD_opencv_apps=OFF \
+        -D BUILD_opencv_java_bindings_gen=OFF \
+        -D BUILD_opencv_dnn=OFF \
+        -D BUILD_opencv_dnn_objdetect=OFF \
+        -D BUILD_opencv_dpm=OFF \
         -D BUILD_DOCS=OFF \
         -D BUILD_PERF_TESTS=OFF \
         -D BUILD_TESTS=OFF \
