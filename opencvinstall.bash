@@ -102,11 +102,11 @@ install_dependencies()
     sudo apt-get upgrade --assume-yes $FLAG_VERBOSE
 
     sudo apt-get install --assume-yes --no-install-recommends build-essential cmake git vim $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends pkg-config unzip ffmpeg python3-dev gfortran python3-pip $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends libdc1394-22-dev libjpeg-dev libpng-dev libtiff5-dev libjasper-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends libv4l-dev libtbb-dev libfaac-dev libmp3lame-dev libtheora-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends libvorbis-dev libxvidcore-dev v4l-utils vtk6 libx264-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends pkg-config unzip python3-dev gfortran python3-pip $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends libdc1394-22-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends libavcodec-dev libavformat-dev libswscale-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends libv4l-dev libtbb-dev libtheora-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends libxvidcore-dev v4l-utils vtk6 libx264-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends liblapacke-dev libopenblas-dev libgdal-dev checkinstall $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libeigen3-dev libatlas-base-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libgirepository1.0-dev libglib2.0-dev $FLAG_VERBOSE
