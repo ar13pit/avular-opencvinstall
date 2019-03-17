@@ -30,15 +30,15 @@ VERBOSE=true
 if [ -f /etc/dphys-swapfile ]
 then
 
-	SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
-	if [ -z "$SWAPSIZE" ]; then
-	    SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
-	    SWAPSIZE_FLAG=1
-	else
-	    SWAPSIZE_FLAG=0
-	fi
+    SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
+    if [ -z "$SWAPSIZE" ]; then
+        SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
+        SWAPSIZE_FLAG=1
+    else
+        SWAPSIZE_FLAG=0
+    fi
 else
-	SWAPSIZE_FLAG=0
+    SWAPSIZE_FLAG=0
 fi
 
 usage()
@@ -90,8 +90,8 @@ install_dependencies()
     echo
     echo -e "\e[35m\e[1mInstalling dependencies \e[0m"
     echo
-    
-    if [ !$VERBOSE ]
+
+    if [ "$VERBOSE" == "true" ]
     then
         FLAG_VERBOSE=
     else
@@ -131,11 +131,11 @@ download_opencv()
     echo -e "\e[35m\e[1mDownloading and extracting OpenCV-$VERSION \e[0m"
     echo
 
-    if [ !$VERBOSE ]
+    if [ "$VERBOSE" == "true" ]
     then
-        FLAG_VERBOSE=-q
-    else
         FLAG_VERBOSE=
+    else
+        FLAG_VERBOSE=-q
     fi
 
     cd
@@ -208,15 +208,15 @@ config_cmake()
         -D WITH_NVCUVID=ON \
         -D WITH_CUDA="${FLAG_CUDA}" \
         -D CUDA_ARCH_BIN="${ARCH_BIN}" \
-	-D CUDA_ARCH_PTX="" \
-	-D ENABLE_FAST_MATH=ON \
-	-D CUDA_FAST_MATH=ON \
-	-D WITH_CUBLAS=ON \
-	-D WITH_LIBV4L=ON \
-	-D WITH_GSTREAMER=ON \
-	-D WITH_GSTREAMER_0_10=OFF \
-	-D WITH_QT=ON \
-	-D WITH_OPENGL=ON \
+        -D CUDA_ARCH_PTX="" \
+        -D ENABLE_FAST_MATH=ON \
+        -D CUDA_FAST_MATH=ON \
+        -D WITH_CUBLAS=ON \
+        -D WITH_LIBV4L=ON \
+        -D WITH_GSTREAMER=ON \
+        -D WITH_GSTREAMER_0_10=OFF \
+        -D WITH_QT=ON \
+        -D WITH_OPENGL=ON \
         -D WITH_CSTRIPES=ON \
         -D WITH_OPENCL=ON \
         -D OPENCV_ENABLE_NONFREE=ON \
@@ -237,17 +237,19 @@ make_opencv()
     echo
     echo -e "\e[35m\e[1mBuilding OpenCV-$VERSION \e[0m"
     echo
-    
+
     cd $OPENCVHOME/build
 
-    if [ "$SWAPSIZE_FLAG" == 1 ]; then
+    if [ "$SWAPSIZE_FLAG" == 1 ]
+    then
         sudo sed -i "s/$SWAPSIZE/CONF_SWAPSIZE=1024/g" /etc/dphys-swapfile
         sudo systemctl restart dphys-swapfile
     fi
 
     make -j $(($(nproc) - 1))
 
-    if [ "$SWAPSIZE_FLAG" == 1 ]; then
+    if [ "$SWAPSIZE_FLAG" == 1 ]
+    then
         sudo sed -i "s/CONF_SWAPSIZE=1024/$SWAPSIZE/g" /etc/dphys-swapfile
         sudo systemctl restart dphys-swapfile
     fi
@@ -258,7 +260,7 @@ install_opencv()
     echo
     echo -e "\e[35m\e[1mInstalling OpenCV-$VERSION \e[0m"
     echo
-    
+
     cd $OPENCVHOME/build
     make install
     sudo ldconfig
@@ -290,7 +292,8 @@ install_complete()
 
     echo -e "\e[35m\e[1mExamine the output of CMake before continuing \e[0m"
     read -n1 -rsp $'Press space to continue...\n' key
-    while [ "$key" != '' ]; do
+    while [ "$key" != '' ]
+    do
         :
     done
 
@@ -300,10 +303,12 @@ install_complete()
 }
 
 # Read Postional Parameters
-if [ -z "$1" ]; then
+if [ -z "$1" ]
+then
     usage
 else
-    while [ "$1" != "" ]; do
+    while [ "$1" != "" ]
+    do
         case $1 in
             -d | --device )
                 shift
@@ -349,7 +354,7 @@ else
 
             --install-default )
                 install_complete ;;
-                
+
             --install-dependencies )
                 install_dependencies ;;
 
