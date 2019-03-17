@@ -31,7 +31,8 @@ if [ -f /etc/dphys-swapfile ]
 then
 
     SWAPSIZE="$(grep "#CONF_SWAPSIZE=" /etc/dphys-swapfile)"
-    if [ -z "$SWAPSIZE" ]; then
+    if [ -z "$SWAPSIZE" ]
+    then
         SWAPSIZE="$(grep "CONF_SWAPSIZE=" /etc/dphys-swapfile)"
         SWAPSIZE_FLAG=1
     else
@@ -74,7 +75,8 @@ usage()
     echo "--------------------------------------------------------------------------"
 }
 
-if [ -z "$VERSION" ]; then
+if [ -z "$VERSION" ]
+then
     echo "version file not found"
     echo
     usage
@@ -200,6 +202,7 @@ config_cmake()
         -D BUILD_DOCS=OFF \
         -D BUILD_PERF_TESTS=OFF \
         -D BUILD_TESTS=OFF \
+        -D BUILD_opencv_python2=OFF \
         -D INSTALL_PYTHON_EXAMPLES=OFF \
         -D INSTALL_C_EXAMPLES=OFF \
         -D WITH_TBB=ON \
@@ -314,29 +317,31 @@ else
                 shift
                 case $1 in
                     rpi3 )
-                        DEVICE="rpi3" 
+                        DEVICE="rpi3"
                         FLAG_CUDA=OFF ;;
 
                     jetsontx1 )
                         DEVICE="jetsontx1"
                         FLAG_CUDA=ON
-                        ARCH_BIN=5.3 ;;
+                        ARCH_BIN="5.3" ;;
 
                     jetsontx2 )
                         DEVICE="jetsontx2"
                         FLAG_CUDA=ON
-                        ARCH_BIN=6.2
+                        ARCH_BIN="6.2"
                         sudo patch -N /usr/local/cuda/include/cuda_gl_interop.h $SOURCE_DIR/patches/jetsontx2/OpenGLHeader.patch
                         sudo ln -sfn /usr/lib/aarch64-linux-gnu/tegra/libGL.so /usr/lib/aarch64-linux-gnu/libGL.so
  ;;
 
-                    desktop)
+                    desktop )
                         DEVICE="desktop"
                         FLAG_CUDA=OFF ;;
 
                     desktop-with-cuda )
                         DEVICE="desktop-with-cuda"
-                        FLAG_CUDA=ON ;;
+                        FLAG_CUDA=ON
+                        # Quadro M1200 Architecture
+                        ARCH_BIN="5.0" ;;
                 esac ;;
 
             -t | --type )
