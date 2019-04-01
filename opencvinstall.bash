@@ -103,16 +103,19 @@ install_dependencies()
     sudo apt-get update $FLAG_VERBOSE
     sudo apt-get upgrade --assume-yes $FLAG_VERBOSE
 
-    sudo apt-get install --assume-yes --no-install-recommends build-essential cmake git vim $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends pkg-config unzip python3-dev gfortran python3-pip $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends build-essential cmake git $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends pkg-config unzip gfortran $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends python3-dev python3-pip python3-numpy ipython3 $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libdc1394-22-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends libavcodec-dev libavformat-dev libswscale-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends libavcodec-dev libavformat-dev libavresample-dev libswscale-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libv4l-dev libtbb-dev libtheora-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libxvidcore-dev v4l-utils vtk6 libvtk6-dev libx264-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends liblapacke-dev libopenblas-dev libgdal-dev checkinstall $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libeigen3-dev libatlas-base-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libgirepository1.0-dev libglib2.0-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends qtbase5-dev $FLAG_VERBOSE
+
+    pip3 install --user --upgrade numpy ipython
 
     if [ "$INSTALLATION" == "gui" ]
     then
@@ -206,6 +209,7 @@ config_cmake()
         -D BUILD_opencv_dnn_objdetect=OFF \
         -D BUILD_opencv_java_bindings_gen=OFF \
         -D BUILD_opencv_python2=OFF \
+        -D BUILD_opencv_python3=ON \
         -D BUILD_PERF_TESTS=OFF \
         -D BUILD_TESTS=OFF \
         -D CUDA_ARCH_BIN="${ARCH_BIN}" \
