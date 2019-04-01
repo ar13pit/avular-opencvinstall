@@ -113,6 +113,7 @@ install_dependencies()
     sudo apt-get install --assume-yes --no-install-recommends liblapacke-dev libopenblas-dev libgdal-dev checkinstall $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libeigen3-dev libatlas-base-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libgirepository1.0-dev libglib2.0-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends libgflags-dev libgoogle-glog-dev $FLAG_VERBOSE
 
     pip3 install --user --upgrade numpy ipython
 
