@@ -236,9 +236,6 @@ config_cmake()
         -D OPENCV_GENERATE_PKGCONFIG=ON \
         -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python3 ..
 
-#        -D OPENCV_GENERATE_PKGCONFIG=ON \
-#        -D OPENCV_PYTHON3_VERSION=ON \
-
 #        -D CMAKE_INSTALL_PREFIX=~/.venvs/cv \
 #        -D PYTHON_EXECUTABLE=~/.venvs/cv/bin/python \
 
