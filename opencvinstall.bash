@@ -108,10 +108,11 @@ install_dependencies()
     sudo apt-get install --assume-yes --no-install-recommends libdc1394-22-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libavcodec-dev libavformat-dev libswscale-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libv4l-dev libtbb-dev libtheora-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends libxvidcore-dev v4l-utils vtk6 libx264-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends libxvidcore-dev v4l-utils vtk6 libvtk6-dev libx264-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends liblapacke-dev libopenblas-dev libgdal-dev checkinstall $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libeigen3-dev libatlas-base-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libgirepository1.0-dev libglib2.0-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends qtbase5-dev $FLAG_VERBOSE
 
     if [ "$INSTALLATION" == "gui" ]
     then
@@ -196,26 +197,26 @@ config_cmake()
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-"${VERSION}"/modules \
-        -D BUILD_JAVA=OFF \
+        -D BUILD_DOCS=OFF \
         -D BUILD_EXAMPLES=OFF \
+        -D BUILD_JAVA=OFF \
         -D BUILD_opencv_apps=OFF \
-        -D BUILD_opencv_java_bindings_gen=OFF \
+        -D BUILD_opencv_dpm=OFF \
         -D BUILD_opencv_dnn=OFF \
         -D BUILD_opencv_dnn_objdetect=OFF \
-        -D BUILD_opencv_dpm=OFF \
-        -D BUILD_DOCS=OFF \
+        -D BUILD_opencv_java_bindings_gen=OFF \
+        -D BUILD_opencv_python2=OFF \
         -D BUILD_PERF_TESTS=OFF \
         -D BUILD_TESTS=OFF \
-        -D BUILD_opencv_python2=OFF \
-        -D INSTALL_PYTHON_EXAMPLES=OFF \
+        -D CUDA_ARCH_BIN="${ARCH_BIN}" \
+        -D CUDA_ARCH_PTX="" \
         -D INSTALL_C_EXAMPLES=OFF \
+        -D INSTALL_PYTHON_EXAMPLES=OFF \
         -D WITH_TBB=ON \
         -D WITH_OPENMP=ON \
         -D WITH_IPP=ON \
         -D WITH_NVCUVID=ON \
         -D WITH_CUDA="${FLAG_CUDA}" \
-        -D CUDA_ARCH_BIN="${ARCH_BIN}" \
-        -D CUDA_ARCH_PTX="" \
         -D ENABLE_FAST_MATH=ON \
         -D CUDA_FAST_MATH=ON \
         -D WITH_CUBLAS=ON \
@@ -226,6 +227,7 @@ config_cmake()
         -D WITH_OPENGL=ON \
         -D WITH_CSTRIPES=ON \
         -D WITH_OPENCL=ON \
+        -D WITH_VTK=ON \
         -D OPENCV_ENABLE_NONFREE=ON \
         -D OPENCV_GENERATE_PKGCONFIG=ON \
         -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python3 ..
