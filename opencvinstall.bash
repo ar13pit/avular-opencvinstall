@@ -109,17 +109,16 @@ install_dependencies()
     sudo apt-get install --assume-yes --no-install-recommends libdc1394-22-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libavcodec-dev libavformat-dev libavresample-dev libswscale-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libv4l-dev libtbb-dev libtheora-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends libxvidcore-dev v4l-utils vtk6 libvtk6-dev libx264-dev $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends libxvidcore-dev v4l-utils libx264-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends liblapacke-dev libopenblas-dev libgdal-dev checkinstall $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libeigen3-dev libatlas-base-dev $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libgirepository1.0-dev libglib2.0-dev $FLAG_VERBOSE
-    sudo apt-get install --assume-yes --no-install-recommends qtbase5-dev $FLAG_VERBOSE
 
     pip3 install --user --upgrade numpy ipython
 
     if [ "$INSTALLATION" == "gui" ]
     then
-        sudo apt-get install --assume-yes --no-install-recommends libgtk-3-dev $FLAG_VERBOSE
+        sudo apt-get install --assume-yes --no-install-recommends libgtk-3-dev libvtk7-dev vtk7 qtbase5-dev $FLAG_VERBOSE
     fi
 }
 
