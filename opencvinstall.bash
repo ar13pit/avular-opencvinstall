@@ -103,7 +103,7 @@ install_dependencies()
     sudo apt-get update $FLAG_VERBOSE
     sudo apt-get upgrade --assume-yes $FLAG_VERBOSE
 
-    sudo apt-get install --assume-yes --no-install-recommends build-essential cmake git $FLAG_VERBOSE
+    sudo apt-get install --assume-yes --no-install-recommends build-essential ccache cmake git $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends pkg-config unzip gfortran $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends python3-dev python3-pip python3-numpy ipython3 $FLAG_VERBOSE
     sudo apt-get install --assume-yes --no-install-recommends libdc1394-22-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev $FLAG_VERBOSE
