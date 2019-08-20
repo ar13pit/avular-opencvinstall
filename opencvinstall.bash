@@ -234,6 +234,7 @@ config_cmake()
         -D WITH_VTK=ON \
         -D OPENCV_ENABLE_NONFREE=ON \
         -D OPENCV_GENERATE_PKGCONFIG=ON \
+        -D ENABLE_PRECOMPILED_HEADERS=ON \
         -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python3 ..
 
 #        -D CMAKE_INSTALL_PREFIX=~/.venvs/cv \
